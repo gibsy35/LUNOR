@@ -34,7 +34,7 @@ import { ShowcaseProject } from './types';
 
 const CATEGORY_BACKGROUNDS = {
   accueil: {
-    video: "https://assets.mixkit.co/videos/preview/mixkit-party-crowd-with-lights-at-a-music-festival-42407-large.mp4",
+    video: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-dj-playing-music-at-a-club-42589-large.mp4",
     image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80",
     title: "FILMS POUR ÉVÉNEMENTS & ARTISTES",
     tagline: "Nous transformons une ambiance en désir, par des images fortes et partageables."
