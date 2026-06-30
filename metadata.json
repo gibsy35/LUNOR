@@ -1,0 +1,6 @@
+{
+  "name": "Lunor Studio",
+  "description": "Studio de prestige de production cinématographique et publicitaire parisien.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
