@@ -19,8 +19,25 @@ import {
   Menu,
   MessageSquare,
   Lock,
-  Compass
+  Compass,
+  Facebook,
+  Instagram,
+  Youtube
 } from 'lucide-react';
+
+// TikTok n'existe pas dans lucide-react : icône SVG custom
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/>
+  </svg>
+);
+
+// Vimeo n'existe pas dans lucide-react : icône SVG custom
+const VimeoIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M22.396 7.164c-.093 2.026-1.507 4.8-4.245 8.32-2.828 3.675-5.224 5.51-7.187 5.51-1.216 0-2.244-1.126-3.079-3.379-.56-2.053-1.118-4.105-1.677-6.158-.622-2.253-1.29-3.379-2.005-3.379-.156 0-.7.328-1.634.98l-.978-1.262c1.03-.906 2.045-1.812 3.044-2.718C6.026 4.06 7.06 3.51 7.84 3.437c1.838-.177 2.967 1.082 3.387 3.776.452 2.907.766 4.714.943 5.422.522 2.37 1.096 3.555 1.724 3.555.488 0 1.221-.772 2.197-2.316.975-1.544 1.498-2.72 1.566-3.528.14-1.335-.387-2.004-1.566-2.004-.559 0-1.13.128-1.722.382 1.144-3.748 3.327-5.57 6.55-5.467 2.39.07 3.518 1.62 3.477 4.907z"/>
+  </svg>
+);
 
 import ShowcaseGrid from './components/ShowcaseGrid';
 import LabSuite from './components/LabSuite';
@@ -66,6 +83,15 @@ const CATEGORY_BACKGROUNDS = {
 };
 
 type TabId = 'accueil' | 'aftermovies' | 'mariages' | 'promotions' | 'artistes' | 'atelier' | 'contact' | 'intranet';
+
+// TODO: remplacer ces URLs par les vrais comptes LUNOR
+const SOCIAL_LINKS = [
+  { id: 'instagram', label: 'Instagram', href: 'https://instagram.com/lunorstudio', Icon: Instagram },
+  { id: 'tiktok', label: 'TikTok', href: 'https://tiktok.com/@lunorstudio', Icon: TikTokIcon },
+  { id: 'facebook', label: 'Facebook', href: 'https://facebook.com/lunorstudio', Icon: Facebook },
+  { id: 'youtube', label: 'YouTube', href: 'https://youtube.com/@lunorstudio', Icon: Youtube },
+  { id: 'vimeo', label: 'Vimeo', href: 'https://vimeo.com/lunorstudio', Icon: VimeoIcon },
+];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>('accueil');
@@ -513,6 +539,20 @@ export default function App() {
           <p>ATELIER : RENNES, FR</p>
           <p>COORDS : 48.1173° N, 1.6778° W</p>
           <p className="text-brand">LUNOR COLLECTIVE 2026</p>
+          <div className="flex justify-end gap-2.5 pt-2 pointer-events-auto">
+            {SOCIAL_LINKS.map(({ id, label, href, Icon }) => (
+              <a
+                key={id}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-6 h-6 rounded-full border border-white/10 hover:border-brand/60 bg-black/40 hover:bg-brand/10 flex items-center justify-center text-zinc-400 hover:text-brand transition-all"
+              >
+                <Icon className="w-3 h-3" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -790,8 +830,22 @@ export default function App() {
               )}
 
               {/* Drawer Footer (Standardized) */}
-              <footer className="p-6 md:p-8 bg-[#020203] border-t border-zinc-900/60 text-[9px] font-mono text-zinc-500 flex justify-between items-center relative z-10">
+              <footer className="p-6 md:p-8 bg-[#020203] border-t border-zinc-900/60 text-[9px] font-mono text-zinc-500 flex flex-col sm:flex-row gap-4 justify-between items-center relative z-10">
                 <span>© 2026 LUNOR RENNES</span>
+                <div className="flex items-center gap-3">
+                  {SOCIAL_LINKS.map(({ id, label, href, Icon }) => (
+                    <a
+                      key={id}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="text-zinc-500 hover:text-brand transition-colors"
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </a>
+                  ))}
+                </div>
                 <span className="text-brand">PRODUCTION CINÉMATOGRAPHIQUE</span>
               </footer>
 
