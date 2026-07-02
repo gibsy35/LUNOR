@@ -13,7 +13,7 @@ export default function CinemaChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'assistant',
-      text: "Bonjour ! Je suis l'Assistant Virtuel de LUNOR. Comment puis-je vous guider dans votre projet de film, d'aftermovie ou d'estimation budgétaire ?",
+      text: "Salut 👋 Sacha & Anoush ici (enfin, le bot qu'on a briefé avant de repartir tourner). On répond souvent depuis un plateau ou la salle de montage donc excuse-nous si ça sent un peu la nuit blanche. C'est pour quoi - clip, aftermovie, mariage, un devis ?",
       time: 'Maintenant'
     }
   ]);
@@ -27,10 +27,10 @@ export default function CinemaChat() {
   }, [messages, isTyping]);
 
   const quickQuestions = [
-    { text: "Quel est le tarif d'un tournage ?", value: "Quel est le tarif pour un tournage de film ?" },
-    { text: "Qui réalise vos films ?", value: "Qui sont les réalisateurs phares de LUNOR ?" },
-    { text: "Combien coûte un aftermovie ?", value: "Combien coûte un aftermovie de soirée à Rennes ?" },
-    { text: "Quels sont vos délais ?", value: "Quels sont vos délais pour le montage et l'étalonnage ?" }
+    { text: "Combien coûte un clip en club ?", value: "Combien coûte un clip tourné en club/boîte de nuit ?" },
+    { text: "Qui êtes-vous ?", value: "C'est qui derrière LUNOR ?" },
+    { text: "Un aftermovie de festival ?", value: "Combien coûte un aftermovie de festival ?" },
+    { text: "Vos délais de montage ?", value: "Quels sont vos délais pour le montage ?" }
   ];
 
   // Petit utilitaire pour piocher une variante au hasard, pour ne pas répéter
@@ -57,51 +57,51 @@ export default function CinemaChat() {
     setTimeout(() => {
       const lower = textToSend.toLowerCase();
       let reply = pick([
-        "Hmm, pas sûr d'avoir bien saisi ta demande. Tu peux reformuler ? Sinon le plus simple c'est de remplir le formulaire de brief en haut, l'équipe te répond directement.",
-        "Je ne suis pas certain de comprendre exactement ce que tu cherches. Dis-m'en un peu plus, ou passe par le formulaire de brief pour un retour perso de l'équipe."
+        "Aïe, j'ai pas tout capté là 😅 Tu peux reformuler ? Sinon file droit au formulaire de brief en haut, on te répond en vrai dans la journée.",
+        "Hmm, ça m'échappe un peu celle-là. Raconte-moi autrement, ou passe par le formulaire de brief - c'est plus fiable qu'un bot à 3h du mat'."
       ]);
 
       // Boîte de nuit / club / soirée : format léger, prix réel du marché
       if ((lower.includes('club') || lower.includes('boîte') || lower.includes('boite') || lower.includes('nuit')) &&
           (lower.includes('clip') || lower.includes('vidéo') || lower.includes('video') || lower.includes('tarif') || lower.includes('prix') || lower.includes('coût') || lower.includes('cout'))) {
         reply = pick([
-          "Pour une captation en club (une soirée, un cameraman, montage rapide), on est plutôt sur 450-500 € HT, pas plus - c'est un format léger, pas une prod complète. Le prix grimpe si tu veux plusieurs caméras ou un montage plus travaillé.",
-          "Alors pour un clip tourné en boîte de nuit sur une seule soirée, compte 450 à 500 € HT en tarif réaliste - un seul opérateur, montage nerveux. Rien à voir avec un aftermovie de festival, c'est beaucoup plus simple à produire."
+          "Alors franchement, un clip en club c'est pas la même histoire qu'un long tournage - un seul cameraman, une soirée, montage nerveux le lendemain. On est plutôt sur 450-500 € HT, pas plus. Si tu veux du multi-caméra ou un montage plus léché, là ça grimpe.",
+          "Pour une boîte de nuit sur une soirée : compte 450 à 500 € HT, c'est le tarif réaliste pour un format léger (1 opérateur, montage rapide). On te fera pas le coup du devis à 2500€ pour ça, c'est pas honnête."
         ]);
       } else if (lower.includes('festival') || (lower.includes('aftermovie') && (lower.includes('festival') || lower.includes('grand')))) {
         reply = pick([
-          "Un aftermovie de festival, avec équipe élargie et plusieurs caméras, ça part plutôt autour de 2 500 € HT selon l'ampleur. Le mieux c'est de me donner la durée de l'event et le nombre de jours de tournage, je t'affine ça.",
-          "Pour du festival (plusieurs jours, équipe complète), les budgets démarrent aux alentours de 2 500 € HT. Passe par le calculateur de devis dans l'Intranet si tu veux un chiffrage précis poste par poste."
+          "Un aftermovie de festival c'est une autre échelle - équipe élargie, plusieurs caméras, souvent 2-3 jours de captation. Ça démarre aux alentours de 2 500 € HT selon l'ampleur. Donne-moi la durée de l'event et on affine ensemble.",
+          "Festival = plus gros dispositif, donc plus gros budget : à partir de ~2 500 € HT. Si tu veux du chiffrage précis poste par poste, va faire un tour sur le calculateur de devis dans l'Intranet, il fait le calcul tout seul."
         ]);
       } else if (lower.includes('mariage')) {
         reply = pick([
-          "Pour un film de mariage soigné (une journée complète, montage type film d'auteur), on tourne autour de 1 800 à 3 500 € HT selon les options - drone, deuxième caméra, etc. Ça dépend beaucoup du nombre d'heures sur place.",
-          "Les mariages c'est du sur-mesure, mais en repère : compte entre 1 800 et 3 500 € HT pour une journée filmée avec montage complet. Dis-moi la durée de l'événement, je t'en dis plus."
+          "Les mariages c'est notre came, on adore ça. Compte entre 1 800 et 3 500 € HT pour une journée complète filmée + montage soigné, ça dépend surtout des options (drone, 2ème caméra...). Raconte-moi la journée type, je t'affine ça.",
+          "Pour un mariage on est plutôt sur du sur-mesure, mais en fourchette réaliste : 1 800 à 3 500 € HT la journée. Dis-m'en plus sur le déroulé et je te fais une estimation moins vague."
         ]);
       } else if (lower.includes('red') || lower.includes('caméra') || lower.includes('camera') || lower.includes('matériel')) {
         reply = pick([
-          "On tourne principalement en RED et Arri Alexa selon le projet, avec des optiques anamorphiques - mais franchement le matos vient toujours après l'histoire qu'on veut raconter, pas l'inverse.",
-          "Côté matériel : RED, Arri, optiques Cooke anamorphiques selon les besoins. Mais chez LUNOR le choix technique se décide en fonction du récit, pas l'inverse."
+          "On bosse en RED ou Arri Alexa selon les projets, optiques anamorphiques la plupart du temps. Mais bon, entre nous, le matos c'est jamais le vrai sujet - c'est l'histoire qu'on raconte qui compte, le reste suit.",
+          "RED, Arri, Cooke anamorphiques - le kit classique quoi. Cela dit on choisit toujours le matériel après avoir calé l'intention du film, jamais l'inverse."
         ]);
-      } else if (lower.includes('réalisateur') || lower.includes('réalise') || lower.includes('roster') || lower.includes('qui êtes') || lower.includes('qui etes') || lower.includes("c'est qui") || lower.includes('cest qui')) {
+      } else if (lower.includes('réalisateur') || lower.includes('réalise') || lower.includes('roster') || lower.includes('qui êtes') || lower.includes('qui etes') || lower.includes("c'est qui") || lower.includes('cest qui') || lower.includes('vous êtes') || lower.includes('vous etes')) {
         reply = pick([
-          "L'équipe créative c'est Sacha et Anoush. Sacha gère surtout le montage et l'étalonnage, Anoush apporte plutôt le regard artistique et la composition d'image.",
-          "On est un duo : Sacha (montage, étalonnage) et Anoush (image, direction artistique). Chacun a sa patte, ça se complète bien."
+          "On est deux : Sacha aux manettes du montage et de l'étalonnage (le genre à recadrer une couleur au pixel près), et Anoush qui gère l'image et la direction artistique, plutôt du genre à chercher LA lumière pendant 20 minutes. On s'engueule parfois mais le rendu en vaut la peine.",
+          "Sacha + Anoush, un duo basé à Rennes. Sacha c'est le rythme et l'étalonnage, Anoush c'est l'œil et la composition. On bosse aussi avec des talents locaux selon ce que le projet demande."
         ]);
       } else if (lower.includes('aftermovie') || lower.includes('soirée') || lower.includes('tarif') || lower.includes('prix') || lower.includes('coût') || lower.includes('cout') || lower.includes('devis')) {
         reply = pick([
-          "Ça dépend vraiment du format : une captation club c'est ~450-500 € HT, un aftermovie de festival plutôt à partir de 2 500 € HT, un mariage entre 1 800 et 3 500 €. Dis-moi le type de projet et je t'affine le chiffre.",
-          "Tout dépend du contexte - club, festival, mariage, clip... les budgets ne sont pas du tout les mêmes. Précise-moi le type d'événement et je te donne une fourchette réaliste."
+          "Ça dépend vraiment du format, on te ment pas : club ~450-500 € HT, festival à partir de ~2 500 € HT, mariage entre 1 800 et 3 500 €. Dis-moi ce que t'as en tête et je te donne un chiffre qui tient la route.",
+          "Tout dépend du contexte - une soirée en club et un aftermovie de festival c'est le jour et la nuit côté budget. Précise le type d'événement, je te sors une fourchette honnête."
         ]);
       } else if (lower.includes('délai') || lower.includes('delai') || lower.includes('temps') || lower.includes('livraison')) {
         reply = pick([
-          "En général 7 à 10 jours ouvrés après le tournage pour une première version montée. Pour un format court urgent (Reels/TikTok), on peut sortir ça en 48h.",
-          "Compte 7-10 jours ouvrés pour le montage après le tournage. Si t'es pressé pour un format court réseaux sociaux, on peut livrer sous 48h."
+          "En général 7-10 jours ouvrés après le tournage pour une première version montée - le temps que Sacha dorme un peu entre deux exports. Pour un format court urgent (Reels/TikTok), on peut sortir ça en 48h chrono.",
+          "7 à 10 jours ouvrés pour le montage. Si c'est urgent pour les réseaux, on peut livrer un format court en 48h - on a l'habitude de bosser dans la nuit de toute façon."
         ]);
       } else if (lower.includes('bonjour') || lower.includes('salut') || lower.includes('hello') || lower.includes('coucou')) {
         reply = pick([
-          "Salut ! Dis-moi, c'est pour quel type de projet - clip, aftermovie, mariage, contenu de marque ?",
-          "Hello ! T'as un projet en tête ? Raconte-moi un peu (type d'événement, lieu, date approximative) et je te guide."
+          "Salut ! Alors, c'est quoi le projet - clip, aftermovie, mariage, contenu de marque ?",
+          "Hey ! Raconte, t'as un projet en tête ? Type d'événement, lieu, date approximative, et je te guide."
         ]);
       } else if (lower.includes('intranet') || lower.includes('mot de passe') || lower.includes('code')) {
         reply = "L'Intranet (outils internes + calculateur de devis), c'est le bouton Intranet en haut, mot de passe : LUNOR2026.";
