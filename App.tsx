@@ -286,7 +286,7 @@ export default function App() {
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-auto cursor-pointer animate-pulse"
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-auto cursor-pointer"
             onMouseEnter={() => setMenuVisible(true)}
             onClick={() => setMenuVisible(true)}
           >
@@ -439,7 +439,7 @@ export default function App() {
               className="w-7 h-7 rounded-full border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all"
               title={muted ? "Activer les effets sonores" : "Couper le son"}
             >
-              {muted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-brand animate-pulse" />}
+              {muted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-brand" />}
             </button>
 
             {/* Brief Estimator launcher */}
@@ -567,7 +567,7 @@ export default function App() {
                   : 'bg-white hover:bg-brand text-zinc-950 font-black'
               }`}
             >
-              {!muted ? <Volume2 className="w-3.5 h-3.5 text-zinc-950 animate-pulse" /> : <VolumeX className="w-3.5 h-3.5 text-zinc-950" />}
+              {!muted ? <Volume2 className="w-3.5 h-3.5 text-zinc-950" /> : <VolumeX className="w-3.5 h-3.5 text-zinc-950" />}
               {!muted ? "Couper le Son" : "Visionner avec Son (Showreel)"}
             </button>
             <button
@@ -633,7 +633,7 @@ export default function App() {
               {/* Header inside the panel with a elegant close trigger */}
               <div className="p-6 md:p-8 flex justify-between items-center border-b border-zinc-900/80 relative z-10">
                 <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse" />
+                  <span className="w-1.5 h-1.5 bg-brand rounded-full" />
                   <span className="text-[9px] font-mono text-zinc-400 tracking-widest uppercase">
                     {activeTab === 'contact' ? 'FORMULAIRE DE BRIEF' : `CATEGORIE : ${activeTab.toUpperCase()}`}
                   </span>
