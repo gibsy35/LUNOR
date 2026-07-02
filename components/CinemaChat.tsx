@@ -151,8 +151,7 @@ export default function CinemaChat() {
             {/* Header */}
             <div className="p-4 border-b border-zinc-900 bg-zinc-950/60 flex justify-between items-center relative">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-brand rounded-full" />
-                <span className="text-[9px] font-mono text-brand tracking-widest uppercase font-black">
+                <span className="text-[9px] font-mono text-zinc-300 tracking-widest uppercase font-black">
                   LUNOR ASSISTANT — EN DIRECT
                 </span>
               </div>
