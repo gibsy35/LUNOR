@@ -215,6 +215,100 @@ export default function IntranetSuite({ projects, setProjects, onClose }: Intran
     contingencyPercent: 10
   });
 
+  // Presets de tarification par type de prestation, calés sur des prix réels du marché.
+  // Une captation en club n'a rien à voir avec un aftermovie de festival ou un mariage :
+  // équipe, matériel et temps de montage ne sont pas les mêmes, donc le devis ne doit pas
+  // partir des mêmes bases. Choisir un preset réinjecte des valeurs cohérentes, modifiables ensuite.
+  type BudgetPresetKey = 'club' | 'mariage' | 'clip' | 'festival' | 'brand' | 'documentaire';
+
+  const budgetPresets: Record<BudgetPresetKey, { label: string; desc: string; values: Partial<typeof budgetState> }> = {
+    club: {
+      label: 'Club / Soirée',
+      desc: 'Captation simple en boîte de nuit — 1 opérateur, montage rapide (~450-500 € HT)',
+      values: {
+        shootDays: 1,
+        scriptwriting: 0, storyboard: 0, scouting: 0,
+        rateDirector: 0, rateDoP: 200, rateAssistantCam: 0, rateSoundEngineer: 0, rateGripElect: 0,
+        rateCameraPkg: 0, rateLensesPkg: 0, rateLightPkg: 0,
+        cateringCatering: 0, transportTravel: 30, locationPermits: 0,
+        editingFlat: 150, colorGradingFlat: 0, soundMixFlat: 0, musicLicenseFlat: 0,
+        agencyMarkupPercent: 15, contingencyPercent: 5
+      }
+    },
+    clip: {
+      label: 'Artiste / Clip',
+      desc: 'Clip musical mi-budget — petite équipe, montage soigné (~3 500-4 500 € HT)',
+      values: {
+        shootDays: 1,
+        scriptwriting: 300, storyboard: 200, scouting: 100,
+        rateDirector: 400, rateDoP: 350, rateAssistantCam: 150, rateSoundEngineer: 0, rateGripElect: 150,
+        rateCameraPkg: 300, rateLensesPkg: 200, rateLightPkg: 200,
+        cateringCatering: 100, transportTravel: 80, locationPermits: 0,
+        editingFlat: 400, colorGradingFlat: 300, soundMixFlat: 150, musicLicenseFlat: 0,
+        agencyMarkupPercent: 15, contingencyPercent: 10
+      }
+    },
+    festival: {
+      label: 'Festival / Aftermovie',
+      desc: 'Aftermovie de festival — équipe élargie, plusieurs caméras (à partir de ~2 500 € HT)',
+      values: {
+        shootDays: 1,
+        scriptwriting: 0, storyboard: 0, scouting: 0,
+        rateDirector: 300, rateDoP: 300, rateAssistantCam: 0, rateSoundEngineer: 0, rateGripElect: 0,
+        rateCameraPkg: 200, rateLensesPkg: 100, rateLightPkg: 100,
+        cateringCatering: 0, transportTravel: 50, locationPermits: 0,
+        editingFlat: 450, colorGradingFlat: 250, soundMixFlat: 100, musicLicenseFlat: 100,
+        agencyMarkupPercent: 15, contingencyPercent: 10
+      }
+    },
+    mariage: {
+      label: 'Mariage',
+      desc: 'Journée complète, montage type film d\'auteur (~1 800-3 500 € HT)',
+      values: {
+        shootDays: 1,
+        scriptwriting: 0, storyboard: 0, scouting: 200,
+        rateDirector: 600, rateDoP: 500, rateAssistantCam: 0, rateSoundEngineer: 0, rateGripElect: 0,
+        rateCameraPkg: 300, rateLensesPkg: 150, rateLightPkg: 0,
+        cateringCatering: 0, transportTravel: 100, locationPermits: 0,
+        editingFlat: 600, colorGradingFlat: 300, soundMixFlat: 150, musicLicenseFlat: 100,
+        agencyMarkupPercent: 15, contingencyPercent: 10
+      }
+    },
+    brand: {
+      label: 'Brand Content / Corporate',
+      desc: 'Production de marque complète, matériel haut de gamme (~5 000-8 000 € HT)',
+      values: {
+        shootDays: 2,
+        scriptwriting: 1200, storyboard: 800, scouting: 600,
+        rateDirector: 1000, rateDoP: 800, rateAssistantCam: 450, rateSoundEngineer: 500, rateGripElect: 500,
+        rateCameraPkg: 750, rateLensesPkg: 500, rateLightPkg: 400,
+        cateringCatering: 350, transportTravel: 400, locationPermits: 1000,
+        editingFlat: 1500, colorGradingFlat: 1200, soundMixFlat: 800, musicLicenseFlat: 400,
+        agencyMarkupPercent: 15, contingencyPercent: 10
+      }
+    },
+    documentaire: {
+      label: 'Documentaire / Autre',
+      desc: 'Tournage sur plusieurs jours, format flexible (~4 000-6 000 € HT)',
+      values: {
+        shootDays: 3,
+        scriptwriting: 800, storyboard: 0, scouting: 400,
+        rateDirector: 400, rateDoP: 350, rateAssistantCam: 150, rateSoundEngineer: 200, rateGripElect: 0,
+        rateCameraPkg: 250, rateLensesPkg: 150, rateLightPkg: 100,
+        cateringCatering: 100, transportTravel: 300, locationPermits: 200,
+        editingFlat: 1200, colorGradingFlat: 600, soundMixFlat: 400, musicLicenseFlat: 200,
+        agencyMarkupPercent: 15, contingencyPercent: 10
+      }
+    }
+  };
+
+  const [activePreset, setActivePreset] = useState<BudgetPresetKey | null>(null);
+
+  const applyBudgetPreset = (key: BudgetPresetKey) => {
+    setActivePreset(key);
+    setBudgetState(prev => ({ ...prev, ...budgetPresets[key].values }));
+  };
+
   const [savedBudgets, setSavedBudgets] = useState<SavedBudget[]>([]);
   const [showBudgetPrint, setShowBudgetPrint] = useState<SavedBudget | null>(null);
 
@@ -1394,6 +1488,36 @@ export default function IntranetSuite({ projects, setProjects, onClose }: Intran
                   >
                     Sauvegarder ce budget <Download className="w-3.5 h-3.5" />
                   </button>
+                </div>
+
+                {/* Preset selector: adapte automatiquement le devis à la réalité du marché selon le type de prestation */}
+                <div className="bg-zinc-950/80 border border-zinc-900 p-6 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-mono text-zinc-400 tracking-widest">TYPE DE PRESTATION — TARIFS RÉALISTES DU MARCHÉ</h4>
+                    {activePreset && (
+                      <span className="text-[9px] font-mono text-brand uppercase tracking-wider">Preset actif : {budgetPresets[activePreset].label}</span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {(Object.keys(budgetPresets) as BudgetPresetKey[]).map((key) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => applyBudgetPreset(key)}
+                        className={`p-3 text-left border transition-all duration-200 ${
+                          activePreset === key
+                            ? 'border-brand bg-brand/10 text-brand'
+                            : 'border-zinc-900 bg-zinc-950/50 text-zinc-400 hover:border-zinc-800 hover:text-zinc-200'
+                        }`}
+                      >
+                        <span className="block text-[11px] font-bold mb-1">{budgetPresets[key].label}</span>
+                        <span className="block text-[9px] font-light leading-relaxed opacity-80">{budgetPresets[key].desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-zinc-600 text-[9px] font-light leading-relaxed pt-1">
+                    Sélectionner un preset réinjecte des tarifs cohérents avec la réalité du terrain (jours de tournage, taille d'équipe, matériel, temps de montage). Tous les champs restent ensuite modifiables librement ci-dessous, pour coller précisément à chaque situation.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">

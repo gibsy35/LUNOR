@@ -33,6 +33,10 @@ export default function CinemaChat() {
     { text: "Quels sont vos délais ?", value: "Quels sont vos délais pour le montage et l'étalonnage ?" }
   ];
 
+  // Petit utilitaire pour piocher une variante au hasard, pour ne pas répéter
+  // mot pour mot la même phrase à chaque fois (ça sonne trop robotique sinon).
+  const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+
   const handleSendMessage = (textToSend: string) => {
     if (!textToSend.trim()) return;
 
@@ -47,23 +51,60 @@ export default function CinemaChat() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response based on keywords
+    // Délai qui varie un peu (800-1900ms) pour éviter l'effet "minuteur identique à chaque fois"
+    const delay = 800 + Math.random() * 1100;
+
     setTimeout(() => {
       const lower = textToSend.toLowerCase();
-      let reply = "Je n'ai pas tout à fait compris votre demande. N'hésitez pas à utiliser notre formulaire de brief (bouton 'Nous contacter' en haut) pour obtenir une estimation personnalisée par l'équipe LUNOR !";
+      let reply = pick([
+        "Hmm, pas sûr d'avoir bien saisi ta demande. Tu peux reformuler ? Sinon le plus simple c'est de remplir le formulaire de brief en haut, l'équipe te répond directement.",
+        "Je ne suis pas certain de comprendre exactement ce que tu cherches. Dis-m'en un peu plus, ou passe par le formulaire de brief pour un retour perso de l'équipe."
+      ]);
 
-      if (lower.includes('red') || lower.includes('caméra') || lower.includes('camera') || lower.includes('matériel')) {
-        reply = "Chez LUNOR, nous privilégions avant tout l'expression artistique et la force narrative. Nous mobilisons une direction de l'image de haute précision et notre sensibilité unique pour façonner des récits d'une pureté cinématographique remarquable.";
-      } else if (lower.includes('réalisateur') || lower.includes('réalise') || lower.includes(' roster') || lower.includes('qui')) {
-        reply = "Notre roster artistique est dirigé par le duo créatif Sacha & Anoush. Sacha excelle en montage rythmique et étalonnage de haute précision, tandis qu'Anoush apporte un regard poétique et des compositions d'auteur.";
-      } else if (lower.includes('aftermovie') || lower.includes('soirée') || lower.includes('tarif') || lower.includes('prix') || lower.includes('coût')) {
-        reply = "Pour un aftermovie de festival ou de soirée à Rennes, les budgets débutent généralement à 2 500 € HT. Cela comprend 1 jour de tournage de prestige, le montage rythmé par Sacha et notre étalonnage signature. Vous pouvez utiliser le calculateur de budget dans l'Intranet pour simuler les coûts exacts !";
-      } else if (lower.includes('délai') || lower.includes('temps') || lower.includes('livraison')) {
-        reply = "Nos délais moyens sont de 7 à 10 jours ouvrés après le tournage pour une première version de montage. Pour les teasers urgents (Reels/TikTok), nous pouvons livrer des formats courts sous 48h afin de capter la frénésie des réseaux.";
-      } else if (lower.includes('bonjour') || lower.includes('salut') || lower.includes('hello')) {
-        reply = "Bonjour ! Ravi de vous accueillir chez LUNOR. Dites-moi quel genre de film (aftermovie de soirée, clip d'artiste, vidéo de marque) vous aimeriez réaliser.";
+      // Boîte de nuit / club / soirée : format léger, prix réel du marché
+      if ((lower.includes('club') || lower.includes('boîte') || lower.includes('boite') || lower.includes('nuit')) &&
+          (lower.includes('clip') || lower.includes('vidéo') || lower.includes('video') || lower.includes('tarif') || lower.includes('prix') || lower.includes('coût') || lower.includes('cout'))) {
+        reply = pick([
+          "Pour une captation en club (une soirée, un cameraman, montage rapide), on est plutôt sur 450-500 € HT, pas plus - c'est un format léger, pas une prod complète. Le prix grimpe si tu veux plusieurs caméras ou un montage plus travaillé.",
+          "Alors pour un clip tourné en boîte de nuit sur une seule soirée, compte 450 à 500 € HT en tarif réaliste - un seul opérateur, montage nerveux. Rien à voir avec un aftermovie de festival, c'est beaucoup plus simple à produire."
+        ]);
+      } else if (lower.includes('festival') || (lower.includes('aftermovie') && (lower.includes('festival') || lower.includes('grand')))) {
+        reply = pick([
+          "Un aftermovie de festival, avec équipe élargie et plusieurs caméras, ça part plutôt autour de 2 500 € HT selon l'ampleur. Le mieux c'est de me donner la durée de l'event et le nombre de jours de tournage, je t'affine ça.",
+          "Pour du festival (plusieurs jours, équipe complète), les budgets démarrent aux alentours de 2 500 € HT. Passe par le calculateur de devis dans l'Intranet si tu veux un chiffrage précis poste par poste."
+        ]);
+      } else if (lower.includes('mariage')) {
+        reply = pick([
+          "Pour un film de mariage soigné (une journée complète, montage type film d'auteur), on tourne autour de 1 800 à 3 500 € HT selon les options - drone, deuxième caméra, etc. Ça dépend beaucoup du nombre d'heures sur place.",
+          "Les mariages c'est du sur-mesure, mais en repère : compte entre 1 800 et 3 500 € HT pour une journée filmée avec montage complet. Dis-moi la durée de l'événement, je t'en dis plus."
+        ]);
+      } else if (lower.includes('red') || lower.includes('caméra') || lower.includes('camera') || lower.includes('matériel')) {
+        reply = pick([
+          "On tourne principalement en RED et Arri Alexa selon le projet, avec des optiques anamorphiques - mais franchement le matos vient toujours après l'histoire qu'on veut raconter, pas l'inverse.",
+          "Côté matériel : RED, Arri, optiques Cooke anamorphiques selon les besoins. Mais chez LUNOR le choix technique se décide en fonction du récit, pas l'inverse."
+        ]);
+      } else if (lower.includes('réalisateur') || lower.includes('réalise') || lower.includes('roster') || lower.includes('qui êtes') || lower.includes('qui etes') || lower.includes("c'est qui") || lower.includes('cest qui')) {
+        reply = pick([
+          "L'équipe créative c'est Sacha et Anoush. Sacha gère surtout le montage et l'étalonnage, Anoush apporte plutôt le regard artistique et la composition d'image.",
+          "On est un duo : Sacha (montage, étalonnage) et Anoush (image, direction artistique). Chacun a sa patte, ça se complète bien."
+        ]);
+      } else if (lower.includes('aftermovie') || lower.includes('soirée') || lower.includes('tarif') || lower.includes('prix') || lower.includes('coût') || lower.includes('cout') || lower.includes('devis')) {
+        reply = pick([
+          "Ça dépend vraiment du format : une captation club c'est ~450-500 € HT, un aftermovie de festival plutôt à partir de 2 500 € HT, un mariage entre 1 800 et 3 500 €. Dis-moi le type de projet et je t'affine le chiffre.",
+          "Tout dépend du contexte - club, festival, mariage, clip... les budgets ne sont pas du tout les mêmes. Précise-moi le type d'événement et je te donne une fourchette réaliste."
+        ]);
+      } else if (lower.includes('délai') || lower.includes('delai') || lower.includes('temps') || lower.includes('livraison')) {
+        reply = pick([
+          "En général 7 à 10 jours ouvrés après le tournage pour une première version montée. Pour un format court urgent (Reels/TikTok), on peut sortir ça en 48h.",
+          "Compte 7-10 jours ouvrés pour le montage après le tournage. Si t'es pressé pour un format court réseaux sociaux, on peut livrer sous 48h."
+        ]);
+      } else if (lower.includes('bonjour') || lower.includes('salut') || lower.includes('hello') || lower.includes('coucou')) {
+        reply = pick([
+          "Salut ! Dis-moi, c'est pour quel type de projet - clip, aftermovie, mariage, contenu de marque ?",
+          "Hello ! T'as un projet en tête ? Raconte-moi un peu (type d'événement, lieu, date approximative) et je te guide."
+        ]);
       } else if (lower.includes('intranet') || lower.includes('mot de passe') || lower.includes('code')) {
-        reply = "Pour accéder à l'Intranet LUNOR (outils de mise à jour du site et de calcul de budget de production), cliquez sur le bouton Intranet et saisissez le mot de passe membre : 'LUNOR2026'.";
+        reply = "L'Intranet (outils internes + calculateur de devis), c'est le bouton Intranet en haut, mot de passe : LUNOR2026.";
       }
 
       const assistantMsg: Message = {
@@ -74,7 +115,7 @@ export default function CinemaChat() {
 
       setMessages(prev => [...prev, assistantMsg]);
       setIsTyping(false);
-    }, 1200);
+    }, delay);
   };
 
   return (
@@ -84,7 +125,10 @@ export default function CinemaChat() {
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            layoutId="chat-bubble"
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
             onClick={() => setIsOpen(true)}
             className="w-12 h-12 rounded-full bg-brand hover:bg-brand-hover text-zinc-950 flex items-center justify-center shadow-[0_10px_25px_rgba(255,42,133,0.35)] transition-transform hover:scale-110 relative"
             title="Ouvrir le Chat LUNOR"
@@ -99,7 +143,11 @@ export default function CinemaChat() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            layoutId="chat-bubble"
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            style={{ transformOrigin: 'bottom right' }}
             className="w-80 md:w-96 h-[480px] bg-[#050506]/95 backdrop-blur-xl border border-zinc-900 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-hidden"
           >
             {/* Header */}
