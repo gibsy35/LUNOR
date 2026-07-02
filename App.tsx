@@ -123,21 +123,36 @@ export default function App() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const homeVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // La vidéo d'accueil est montée une seule fois : on s'assure qu'elle joue en continu
-  // et qu'elle reste synchronisée avec le bouton mute, même si le navigateur bloque
-  // l'autoplay au premier chargement (il suffit alors d'un clic sur le mute pour relancer).
+  // La vidéo d'accueil est montée une seule fois et ne doit plus jamais s'arrêter.
+  // Problème identifié : certains navigateurs mobiles (Chrome Android en particulier)
+  // mettent la vidéo en pause automatiquement dès qu'elle est recouverte par le panneau
+  // latéral (drawer), même si l'élément vidéo lui-même n'est jamais démonté du DOM.
+  // Fermer le drawer ne suffit donc pas à relancer la lecture toute seule : il faut
+  // le lui redemander explicitement à chaque retour sur l'accueil.
   useEffect(() => {
     const el = homeVideoRef.current;
     if (!el) return;
     el.muted = muted;
-    const tryPlay = () => {
-      el.play().catch(() => {
-        // Autoplay bloqué par le navigateur (fréquent tant qu'il n'y a pas eu d'interaction).
-        // On retentera silencieusement au prochain changement d'état (ex: clic sur mute).
-      });
+    el.play().catch(() => {
+      // Autoplay bloqué (fréquent tant qu'il n'y a pas eu d'interaction) : on retentera
+      // silencieusement au prochain changement d'état pertinent.
+    });
+  }, [muted, activeTab, isDrawerOpen]);
+
+  // Filet de sécurité : si le navigateur met quand même la vidéo en pause de son propre
+  // chef (économie d'énergie, onglet masqué un instant, etc.), on la relance dès qu'elle
+  // redevient visible plutôt que de laisser un écran noir.
+  useEffect(() => {
+    const el = homeVideoRef.current;
+    if (!el) return;
+    const handlePause = () => {
+      if (document.visibilityState === 'visible') {
+        el.play().catch(() => {});
+      }
     };
-    tryPlay();
-  }, [muted]);
+    el.addEventListener('pause', handlePause);
+    return () => el.removeEventListener('pause', handlePause);
+  }, []);
 
   // Subtle audio blip feedback for high-end digital luxury feel
   const playHoverSound = () => {
