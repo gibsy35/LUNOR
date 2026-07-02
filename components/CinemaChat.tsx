@@ -150,7 +150,6 @@ export default function CinemaChat() {
           >
             {/* Header */}
             <div className="p-4 border-b border-zinc-900 bg-zinc-950/60 flex justify-between items-center relative">
-              <div className="absolute top-[1px] left-4 right-4 h-[1px] bg-brand" />
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-brand rounded-full" />
                 <span className="text-[9px] font-mono text-brand tracking-widest uppercase font-black">

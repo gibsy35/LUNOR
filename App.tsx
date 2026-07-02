@@ -286,7 +286,7 @@ export default function App() {
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-auto cursor-pointer"
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-auto cursor-pointer animate-pulse"
             onMouseEnter={() => setMenuVisible(true)}
             onClick={() => setMenuVisible(true)}
           >
