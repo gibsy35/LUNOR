@@ -127,7 +127,6 @@ export default function CinemaChat() {
           <motion.button
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.6 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
             onClick={() => setIsOpen(true)}
             className="w-12 h-12 rounded-full bg-brand hover:bg-brand-hover text-zinc-950 flex items-center justify-center shadow-[0_10px_25px_rgba(255,42,133,0.35)] transition-transform hover:scale-110 relative"

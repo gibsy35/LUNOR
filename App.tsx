@@ -121,6 +121,23 @@ export default function App() {
   }, [projects]);
 
   const audioContextRef = useRef<AudioContext | null>(null);
+  const homeVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  // La vidéo d'accueil est montée une seule fois : on s'assure qu'elle joue en continu
+  // et qu'elle reste synchronisée avec le bouton mute, même si le navigateur bloque
+  // l'autoplay au premier chargement (il suffit alors d'un clic sur le mute pour relancer).
+  useEffect(() => {
+    const el = homeVideoRef.current;
+    if (!el) return;
+    el.muted = muted;
+    const tryPlay = () => {
+      el.play().catch(() => {
+        // Autoplay bloqué par le navigateur (fréquent tant qu'il n'y a pas eu d'interaction).
+        // On retentera silencieusement au prochain changement d'état (ex: clic sur mute).
+      });
+    };
+    tryPlay();
+  }, [muted]);
 
   // Subtle audio blip feedback for high-end digital luxury feel
   const playHoverSound = () => {
@@ -188,33 +205,49 @@ export default function App() {
         Occupies the complete screen backdrop
       */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentBgKey}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 0.65, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.75, ease: 'easeOut' }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <video
+        {/* 
+          VIDÉO D'ACCUEIL PERSISTANTE : montée une seule fois au premier rendu et jamais
+          démontée. Elle tourne en continu, même quand on navigue sur d'autres onglets -
+          elle est juste masquée en opacité derrière la vidéo de catégorie active.
+          Ça évite le fond noir causé par un remount/relance ratée de la vidéo.
+        */}
+        <video
+          ref={homeVideoRef}
+          src={CATEGORY_BACKGROUNDS.accueil.video}
+          autoPlay
+          loop
+          muted={muted}
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out"
+          style={{ opacity: currentBgKey === 'accueil' ? 0.65 : 0 }}
+        />
+
+        {/* Vidéos de catégorie : se superposent en fondu par-dessus la vidéo d'accueil,
+            qui elle continue de tourner en dessous sans jamais s'interrompre. */}
+        <AnimatePresence>
+          {currentBgKey !== 'accueil' && (
+            <motion.div
               key={currentBgKey}
-              src={currentBg.video}
-              autoPlay
-              loop
-              muted={muted}
-              playsInline
-              className="w-full h-full object-cover"
-              ref={(el) => {
-                if (el) {
-                  el.muted = muted;
-                  el.play().catch((err) => {
-                    console.log("Autoplay play() catch:", err);
-                  });
-                }
-              }}
-            />
-          </motion.div>
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 0.65, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.75, ease: 'easeOut' }}
+              className="absolute inset-0 w-full h-full"
+            >
+              <video
+                src={currentBg.video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+                onError={() => {
+                  // Si la vidéo distante échoue à charger, on reste tranquillement
+                  // sur la vidéo d'accueil visible en dessous plutôt qu'un écran noir.
+                }}
+              />
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Cinematic gradient vignette protecting text legibility */}
