@@ -466,7 +466,8 @@ export default function App() {
             {/* Mobile hamburger - hidden on desktop */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-zinc-300 hover:text-white p-1"
+              className="md:hidden text-zinc-300 hover:text-white p-2.5 -mr-1.5"
+              aria-label="Ouvrir le menu"
             >
               <Menu className="w-4 h-4" />
             </button>

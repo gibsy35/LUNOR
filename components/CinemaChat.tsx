@@ -119,7 +119,7 @@ export default function CinemaChat() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans text-left">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 font-sans text-left" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       
       {/* TRIGGER BUTTON (ROUND FLOATING BUBBLE ON THE LEFT) */}
       <AnimatePresence>
@@ -129,10 +129,9 @@ export default function CinemaChat() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
             onClick={() => setIsOpen(true)}
-            className="w-12 h-12 rounded-full bg-brand hover:bg-brand-hover text-zinc-950 flex items-center justify-center shadow-[0_10px_25px_rgba(255,42,133,0.35)] transition-transform hover:scale-110 relative"
+            className="w-12 h-12 rounded-full bg-brand hover:bg-brand-hover text-zinc-950 flex items-center justify-center shadow-[0_10px_25px_rgba(255,42,133,0.35)] transition-transform hover:scale-110"
             title="Ouvrir le Chat LUNOR"
           >
-            <span className="absolute inset-0 rounded-full bg-brand animate-ping opacity-25" />
             <MessageSquare className="w-5 h-5" />
           </motion.button>
         )}
@@ -147,13 +146,13 @@ export default function CinemaChat() {
             exit={{ opacity: 0, scale: 0.95, y: 12 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             style={{ transformOrigin: 'bottom right' }}
-            className="w-80 md:w-96 h-[480px] bg-[#050506]/95 backdrop-blur-xl border border-zinc-900 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-hidden"
+            className="w-[calc(100vw-2rem)] max-w-sm sm:w-80 md:w-96 h-[70dvh] max-h-[520px] sm:h-[480px] bg-[#050506]/95 backdrop-blur-xl border border-zinc-900 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 border-b border-zinc-900 bg-zinc-950/60 flex justify-between items-center relative">
               <div className="absolute top-[1px] left-4 right-4 h-[1px] bg-brand" />
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse" />
+                <span className="w-1.5 h-1.5 bg-brand rounded-full" />
                 <span className="text-[9px] font-mono text-brand tracking-widest uppercase font-black">
                   LUNOR ASSISTANT — EN DIRECT
                 </span>
@@ -233,7 +232,7 @@ export default function CinemaChat() {
                 placeholder="Votre message pour LUNOR..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-zinc-950 border border-zinc-900 focus:border-brand/60 px-3 py-2 text-zinc-100 font-sans text-xs focus:outline-none"
+                className="flex-1 min-w-0 bg-zinc-950 border border-zinc-900 focus:border-brand/60 px-3 py-2 text-zinc-100 font-sans text-base sm:text-xs focus:outline-none"
               />
               <button
                 type="submit"
